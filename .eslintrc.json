@@ -30,6 +30,12 @@
         "ts": "never",
         "tsx": "never"
       }
+    ],
+    "react/function-component-definition": [
+      "error",
+      {
+        "namedComponents": ["function-declaration", "arrow-function"]
+      }
     ]
   }
 }
