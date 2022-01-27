@@ -1,80 +1,87 @@
-import sliceDecimals from '../utils/sliceDecimals';
-
-// CART VALUE
-const isUnderMinimumCartValue = (cartValue: number): boolean =>
-  cartValue <= 10.0;
-
-const isNotOverMaxCartValue = (cartValue: number): boolean =>
-  cartValue <= 100.0;
-
-// VALUE SURCHARGE
-const calculateValueSurcharge = (cartValue: number) => {
-  if (isUnderMinimumCartValue(cartValue)) return Math.round(10.0 - cartValue);
-  return 0;
-};
+import {
+  Dinero,
+  dinero,
+  add,
+  subtract,
+  multiply,
+  lessThan,
+  lessThanOrEqual,
+  greaterThanOrEqual
+} from 'dinero.js';
+import { EUR } from '@dinero.js/currencies';
 
 // DISTANCE SURCHARGE
-const getDistanceMultiplier = (exceedingDistance: number): number => {
-  const remainder: number = exceedingDistance / 500;
-  if (remainder <= 1) return 1;
-  if (remainder > 1) return sliceDecimals(remainder, 0);
-  return 0;
-};
+export const isOverDistanceLimit = (deliveryDistance: number): boolean =>
+  deliveryDistance > 1000;
 
-const isOverDistanceLimit = (deliveryDistance: number): boolean =>
-  deliveryDistance >= 1000;
-const calculateDistanceSurcharge = (deliveryDistance: number) => {
-  const baseFee: number = 2.0;
+export const calculateDistanceSurcharge = (
+  deliveryDistance: number
+): Dinero<number> => {
   if (isOverDistanceLimit(deliveryDistance)) {
-    const exceedingDistance = deliveryDistance - 1000;
-    const distanceMultiplier = getDistanceMultiplier(exceedingDistance);
-    return baseFee + distanceMultiplier;
+    const finalFee: number = Math.ceil(deliveryDistance / 500);
+    return dinero({ amount: finalFee * 100, currency: EUR });
   }
-  return baseFee;
+  return dinero({ amount: 200, currency: EUR });
 };
 
-// ITEM SURCHARGE
-const isOverFourItems = (itemAmount: number): boolean => itemAmount > 4;
+// ITEM AMOUNT SURCHARGE
+export const isOverFourItems = (itemAmount: number): boolean => itemAmount > 4;
 
-const calculateItemSurcharge = (itemAmount: number): number => {
+export const calculateItemSurcharge = (itemAmount: number): Dinero<number> => {
   if (isOverFourItems(itemAmount)) {
-    return (itemAmount - 4) * 0.5;
+    return dinero({ amount: 50 * (itemAmount - 4), currency: EUR });
   }
-  return 0;
+  return dinero({ amount: 0, currency: EUR });
 };
 
-// DELIVERY FEE LIMIT
-const isNotUnderDeliveryFeeLimit = (deliveryFee: number): boolean =>
-  deliveryFee >= 15.0;
-
-// RUSH OUR SURCHARGE
-const isRushHour = (deliveryTime: Date): boolean => {
+// RUSH HOUR SURCHARGE
+export const isRushHour = (deliveryTime: Date): boolean => {
   const weekDay = deliveryTime.getUTCDay(); // 0-6 Sunday to Saturday
   const hour = deliveryTime.getUTCHours();
   if (weekDay === 5) return hour >= 15 && hour <= 19;
   return false;
 };
 
-const calculateRushHourMultiplier = (deliveryTime: Date): number => {
+export const calculateRushHourMultiplier = (deliveryTime: Date): number => {
   if (isRushHour(deliveryTime)) return 1.1;
   return 0;
 };
 
-const calculateDeliveryFee = (
-  cartValue: number,
+// CART VALUE SURCHARGE
+export const isUnderMinCartValue = (cartValue: Dinero<number>): boolean =>
+  lessThan(cartValue, dinero({ amount: 1000, currency: EUR }));
+
+export const isNotOverMaxCartValue = (cartValue: Dinero<number>): boolean =>
+  lessThanOrEqual(cartValue, dinero({ amount: 10000, currency: EUR }));
+
+export const calculateCartValueSurcharge = (cartValue: Dinero<number>) => {
+  if (isUnderMinCartValue(cartValue)) {
+    return subtract(dinero({ amount: 1000, currency: EUR }), cartValue);
+  }
+  return dinero({ amount: 0, currency: EUR });
+};
+
+// DELIVERY FEE LIMIT
+export const isNotUnderDeliveryFeeLimit = (
+  deliveryFee: Dinero<number>
+): boolean =>
+  greaterThanOrEqual(deliveryFee, dinero({ amount: 1500, currency: EUR }));
+
+export const calculateDeliveryFee = (
+  cartValue: Dinero<number>,
   deliveryDistance: number,
   itemAmount: number,
   deliveryTime: Date
-) => {
-  let finalFee: number = 0.0;
+): Dinero<number> => {
+  let finalFee: Dinero<number> = dinero({ amount: 0, currency: EUR });
   if (isNotOverMaxCartValue(cartValue)) {
-    finalFee += calculateValueSurcharge(cartValue);
-    finalFee += calculateDistanceSurcharge(deliveryDistance);
-    finalFee += calculateItemSurcharge(itemAmount);
-    finalFee *= calculateRushHourMultiplier(deliveryTime);
+    finalFee = add(finalFee, calculateCartValueSurcharge(cartValue));
+    finalFee = add(finalFee, calculateDistanceSurcharge(deliveryDistance));
+    finalFee = add(finalFee, calculateItemSurcharge(itemAmount));
+    finalFee = multiply(finalFee, calculateRushHourMultiplier(deliveryTime));
 
     if (isNotUnderDeliveryFeeLimit(finalFee)) {
-      finalFee = 15.0;
+      finalFee = dinero({ amount: 1500, currency: EUR });
     }
   }
 
