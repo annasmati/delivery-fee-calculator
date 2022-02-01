@@ -25,6 +25,7 @@ function App() {
     <div className="App">
       <style>{css}</style>
       <Header />
+      <FeeCalculator />
     </div>
   );
 }
