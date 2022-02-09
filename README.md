@@ -30,10 +30,10 @@ To run the server use:
 npm start
 ```
 
-These scripts can help during development
--`npm run lint` runs the linter
--`npm run lint:fix` runs the linter and automatically fixes what it can
--`npm run format` formats all files
+These scripts can be used during development
+- `npm run lint` runs the linter
+- `npm run lint:fix` runs the linter and automatically fixes what it can
+- `npm run format` formats all files
 
 
 ## Testing
