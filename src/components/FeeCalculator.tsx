@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState } from 'react';
 import '../assets/scss/fonts.scss';
+import './FeeCalculator.scss';
 
 import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Grid';
@@ -120,19 +121,6 @@ const FeeCalculator: React.FC = () => {
     }
   };
 
-  const css = `
-  .calculator-container {
-    margin-top: 5em;
-    padding: 3em;
-    max-width: 500px;
-    border-radius: 10px;
-    background-color: white;
-    font-family: 'Open Sans', sans-serif;
-    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-  `;
-
-  const buttonCss = { backgroundColor: '#009de0' };
-
   return (
     <div className="calculator-container">
       <Stack
@@ -243,10 +231,18 @@ const FeeCalculator: React.FC = () => {
           </Grid>
         </Grid>
         <Stack spacing={2}>
-          <Button onClick={calculateFee} variant="contained" sx={buttonCss}>
+          <Button
+            sx={{ backgroundColor: '#009de0' }}
+            onClick={calculateFee}
+            variant="contained"
+          >
             Calculate delivery price
           </Button>
-          <Button onClick={resetValues} variant="contained" sx={buttonCss}>
+          <Button
+            sx={{ backgroundColor: '#009de0' }}
+            onClick={resetValues}
+            variant="contained"
+          >
             Reset
           </Button>
         </Stack>
@@ -254,7 +250,6 @@ const FeeCalculator: React.FC = () => {
           Total price of delivery: {total}
         </Typography>
       </Stack>
-      <style>{css}</style>
     </div>
   );
 };
