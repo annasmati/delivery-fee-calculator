@@ -8,7 +8,7 @@ import {
   toUnit
 } from 'dinero.js';
 import { EUR } from '@dinero.js/currencies';
-import { format, getHours, isFriday } from 'date-fns';
+import moment from 'moment';
 import { convertToDinero, dineroToInteger } from '../utils/dineroParser';
 import roundToMultipleOfFive from '../utils/roundToMultipleOfFive';
 
@@ -56,17 +56,16 @@ export const calculateItemSurcharge = (itemAmount: number): Dinero<number> => {
 
 /**
  * Checks if given date falls into rush hour window.
- * @param {Date | null} deliveryTime time of delivery
+ * @param {moment.Moment} deliveryTime time of delivery
  * @returns {boolean} true or false
  */
 export const isRushHour = (
-  deliveryDate: Date | null,
-  deliveryTime: Date | null
+  deliveryDate: moment.Moment,
+  deliveryTime: moment.Moment
 ): boolean => {
   if (deliveryDate && deliveryTime != null) {
-    format(deliveryTime, 'aaa');
-    const hour: number = getHours(deliveryTime);
-    if (isFriday(deliveryDate)) return hour >= 15 && hour <= 18;
+    const hour: number = moment(deliveryTime).utc().hours();
+    if (moment(deliveryDate).utc().day() === 5) return hour >= 15 && hour <= 18;
   }
   return false;
 };
@@ -128,16 +127,16 @@ export const isNotUnderDeliveryFeeLimit = (
  * @param {number} cartValueAsNumber cart value as a number
  * @param {number} deliveryDistance delivery distance
  * @param {number} itemAmount amount of items
- * @param {Date | null} deliveryDate date of delivery
- * @param {Date | null} deliveryTime time of delivery
+ * @param {moment.Moment} deliveryDate date of delivery
+ * @param {moment.Moment} deliveryTime time of delivery
  * @returns {number} final delivery fee as a float number (two decimals)
  */
 export const calculateDeliveryFee = (
   cartValueAsNumber: number,
   deliveryDistance: number,
   itemAmount: number,
-  deliveryDate: Date | null,
-  deliveryTime: Date | null
+  deliveryDate: moment.Moment,
+  deliveryTime: moment.Moment
 ): number => {
   // Rounding possible float number to nearest 0.05 to prevent rounding errors later on
   const roundedCartValue: number = roundToMultipleOfFive(cartValueAsNumber);
