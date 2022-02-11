@@ -1,10 +1,30 @@
 .calculator-container {
   margin-top: 5em;
   padding: 3em;
-  max-width: 500px;
+  max-width: 600px;
   border-radius: 10px;
   background-color: white;
   font-family: 'Open Sans', sans-serif;
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
     rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+}
+
+// input field decorators
+.euiFormControlLayout--group .euiFormLabel {
+  background-color: #fbfcfd;
+  color: rgba(0, 0, 0, 0.7);
+  font-weight: 400;
+  font-size: small;
+}
+
+.calculator-button {
+  background-color: rgb(70, 188, 235) !important;
+}
+
+.calculator-button:hover {
+  background-color: rgb(67, 175, 218) !important;
+}
+
+.calculator-button-empty {
+  color: rgb(67, 173, 214) !important;
 }

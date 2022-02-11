@@ -14,9 +14,4 @@ describe('Component renders correctly', () => {
     render(<Header />);
     expect(screen.getByText('Delivery Fee Calculator')).toBeInTheDocument();
   });
-
-  it('renders logo', () => {
-    render(<Header />);
-    expect(screen.getByAltText('logo')).toBeInTheDocument();
-  });
 });
