@@ -16,7 +16,7 @@ import moment from 'moment';
 import calculateDeliveryFee from '../services/deliveryFeeCalculator';
 
 /**
- * Component that calculates delivery fee based on given user input
+ * Component that shows calculated delivery fee based on given user input
  */
 const FeeCalculator: React.FC = () => {
   // Number inputs need to be handled partly as strings due to unsolved React bug
@@ -215,7 +215,7 @@ const FeeCalculator: React.FC = () => {
               Reset
             </Button>
             <EuiSpacer />
-            <EuiText data-testid="total">
+            <EuiText>
               Total price of delivery: <strong>{total}</strong>
             </EuiText>
           </EuiFlexGroup>
