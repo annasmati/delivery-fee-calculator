@@ -1,5 +1,6 @@
 import { dinero, toSnapshot } from 'dinero.js';
 import { EUR } from '@dinero.js/currencies';
+import moment from 'moment';
 import {
   isOverDistanceLimit,
   calculateDistanceSurcharge,
@@ -103,54 +104,87 @@ describe('Rush hour surcharge', () => {
   test('Should check if given date falls into rush hour window', () => {
     expect(
       isRushHour(
-        new Date(2022, 0, 31, 15, 0, 0),
-        new Date(2022, 0, 31, 15, 0, 0)
+        moment(new Date(Date.UTC(2022, 0, 31, 15, 0, 0))),
+        moment(new Date(Date.UTC(2022, 0, 31, 15, 0, 0)))
       )
-    ).toBeFalsy();
-    expect(
-      isRushHour(new Date(2022, 1, 1, 15, 0, 0), new Date(2022, 1, 1, 15, 0, 0))
-    ).toBeFalsy();
-    expect(
-      isRushHour(new Date(2022, 1, 2, 15, 0, 0), new Date(2022, 1, 2, 15, 0, 0))
-    ).toBeFalsy();
-    expect(
-      isRushHour(new Date(2022, 1, 3, 15, 0, 0), new Date(2022, 1, 3, 15, 0, 0))
     ).toBeFalsy();
     expect(
       isRushHour(
-        new Date(2022, 1, 4, 14, 59, 0),
-        new Date(2022, 1, 4, 14, 59, 0)
+        moment(new Date(Date.UTC(2022, 1, 1, 15, 0, 0))),
+        moment(new Date(Date.UTC(2022, 1, 1, 15, 0, 0)))
       )
     ).toBeFalsy();
     expect(
-      isRushHour(new Date(2022, 1, 4, 15, 0, 0), new Date(2022, 1, 4, 15, 0, 0))
-    ).toBeTruthy();
+      isRushHour(
+        moment(new Date(Date.UTC(2022, 1, 2, 15, 0, 0))),
+        moment(new Date(Date.UTC(2022, 1, 2, 15, 0, 0)))
+      )
+    ).toBeFalsy();
     expect(
-      isRushHour(new Date(2022, 1, 4, 15, 1, 0), new Date(2022, 1, 4, 15, 1, 0))
-    ).toBeTruthy();
+      isRushHour(
+        moment(new Date(Date.UTC(2022, 1, 3, 15, 0, 0))),
+        moment(new Date(Date.UTC(2022, 1, 3, 15, 0, 0)))
+      )
+    ).toBeFalsy();
     expect(
-      isRushHour(new Date(2022, 1, 4, 16, 0, 0), new Date(2022, 1, 4, 16, 0, 0))
-    ).toBeTruthy();
+      isRushHour(
+        moment(new Date(Date.UTC(2022, 1, 4, 14, 59, 0))),
+        moment(new Date(Date.UTC(2022, 1, 4, 14, 59, 0)))
+      )
+    ).toBeFalsy();
     expect(
-      isRushHour(new Date(2022, 1, 4, 17, 0, 0), new Date(2022, 1, 4, 17, 0, 0))
-    ).toBeTruthy();
-    expect(
-      isRushHour(new Date(2022, 1, 4, 18, 0, 0), new Date(2022, 1, 4, 18, 0, 0))
+      isRushHour(
+        moment(new Date(Date.UTC(2022, 1, 4, 15, 0, 0))),
+        moment(new Date(Date.UTC(2022, 1, 4, 15, 0, 0)))
+      )
     ).toBeTruthy();
     expect(
       isRushHour(
-        new Date(2022, 1, 4, 18, 59, 0),
-        new Date(2022, 1, 4, 18, 59, 0)
+        moment(new Date(Date.UTC(2022, 1, 4, 15, 1, 0))),
+        moment(new Date(Date.UTC(2022, 1, 4, 15, 1, 0)))
       )
     ).toBeTruthy();
     expect(
-      isRushHour(new Date(2022, 1, 4, 19, 0, 0), new Date(2022, 1, 4, 19, 0, 0))
+      isRushHour(
+        moment(new Date(Date.UTC(2022, 1, 4, 16, 0, 0))),
+        moment(new Date(Date.UTC(2022, 1, 4, 16, 0, 0)))
+      )
+    ).toBeTruthy();
+    expect(
+      isRushHour(
+        moment(new Date(Date.UTC(2022, 1, 4, 17, 0, 0))),
+        moment(new Date(Date.UTC(2022, 1, 4, 17, 0, 0)))
+      )
+    ).toBeTruthy();
+    expect(
+      isRushHour(
+        moment(new Date(Date.UTC(2022, 1, 4, 18, 0, 0))),
+        moment(new Date(Date.UTC(2022, 1, 4, 18, 0, 0)))
+      )
+    ).toBeTruthy();
+    expect(
+      isRushHour(
+        moment(new Date(Date.UTC(2022, 1, 4, 18, 59, 0))),
+        moment(new Date(Date.UTC(2022, 1, 4, 18, 59, 0)))
+      )
+    ).toBeTruthy();
+    expect(
+      isRushHour(
+        moment(new Date(Date.UTC(2022, 1, 4, 19, 0, 0))),
+        moment(new Date(Date.UTC(2022, 1, 4, 19, 0, 0)))
+      )
     ).toBeFalsy();
     expect(
-      isRushHour(new Date(2022, 1, 5, 15, 0, 0), new Date(2022, 1, 5, 15, 0, 0))
+      isRushHour(
+        moment(new Date(Date.UTC(2022, 1, 5, 15, 0, 0))),
+        moment(new Date(Date.UTC(2022, 1, 5, 15, 0, 0)))
+      )
     ).toBeFalsy();
     expect(
-      isRushHour(new Date(2022, 1, 6, 15, 0, 0), new Date(2022, 1, 6, 15, 0, 0))
+      isRushHour(
+        moment(new Date(Date.UTC(2022, 1, 6, 15, 0, 0))),
+        moment(new Date(Date.UTC(2022, 1, 6, 15, 0, 0)))
+      )
     ).toBeFalsy();
   });
 
@@ -278,8 +312,8 @@ describe('delivery fee calculator functionality', () => {
         20,
         1000,
         1,
-        new Date(2022, 0, 31, 15, 0, 0),
-        new Date(2022, 0, 31, 15, 0, 0)
+        moment(new Date(Date.UTC(2022, 0, 31, 15, 0, 0))),
+        moment(new Date(Date.UTC(2022, 0, 31, 15, 0, 0)))
       )
     ).toBe(2));
 
@@ -289,8 +323,8 @@ describe('delivery fee calculator functionality', () => {
         20,
         2000,
         10,
-        new Date(2022, 1, 4, 17, 0, 0),
-        new Date(2022, 1, 4, 17, 0, 0)
+        moment(new Date(Date.UTC(2022, 1, 4, 17, 0, 0))),
+        moment(new Date(Date.UTC(2022, 1, 4, 17, 0, 0)))
       )
     ).toBe(7.7);
   });
@@ -301,8 +335,8 @@ describe('delivery fee calculator functionality', () => {
         5,
         1000,
         1,
-        new Date(2022, 0, 31, 15, 0, 0),
-        new Date(2022, 0, 31, 15, 0, 0)
+        moment(new Date(Date.UTC(2022, 0, 31, 15, 0, 0))),
+        moment(new Date(Date.UTC(2022, 0, 31, 15, 0, 0)))
       )
     ).toBe(7);
   });
@@ -313,8 +347,8 @@ describe('delivery fee calculator functionality', () => {
         5,
         2000,
         10,
-        new Date(2022, 1, 4, 17, 0, 0),
-        new Date(2022, 1, 4, 17, 0, 0)
+        moment(new Date(Date.UTC(2022, 1, 4, 17, 0, 0))),
+        moment(new Date(Date.UTC(2022, 1, 4, 17, 0, 0)))
       )
     ).toBe(13.2);
   });
@@ -325,8 +359,8 @@ describe('delivery fee calculator functionality', () => {
         100,
         1000,
         1,
-        new Date(2022, 0, 31, 15, 0, 0),
-        new Date(2022, 0, 31, 15, 0, 0)
+        moment(new Date(Date.UTC(2022, 0, 31, 15, 0, 0))),
+        moment(new Date(Date.UTC(2022, 0, 31, 15, 0, 0)))
       )
     ).toBe(0);
   });
@@ -337,8 +371,8 @@ describe('delivery fee calculator functionality', () => {
         100,
         1500,
         10,
-        new Date(2022, 1, 4, 17, 0, 0),
-        new Date(2022, 1, 4, 17, 0, 0)
+        moment(new Date(Date.UTC(2022, 1, 4, 17, 0, 0))),
+        moment(new Date(Date.UTC(2022, 1, 4, 17, 0, 0)))
       )
     ).toBe(0);
   });
@@ -349,8 +383,8 @@ describe('delivery fee calculator functionality', () => {
         0.2,
         1500,
         50,
-        new Date(2022, 1, 4, 17, 0, 0),
-        new Date(2022, 1, 4, 17, 0, 0)
+        moment(new Date(Date.UTC(2022, 1, 4, 17, 0, 0))),
+        moment(new Date(Date.UTC(2022, 1, 4, 17, 0, 0)))
       )
     ).toBe(15);
   });

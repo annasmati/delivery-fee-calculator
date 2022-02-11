@@ -2,23 +2,21 @@
 import React, { useState } from 'react';
 import '../assets/scss/fonts.scss';
 import './FeeCalculator.scss';
-
-import Stack from '@mui/material/Stack';
-import Grid from '@mui/material/Grid';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import TimePicker from '@mui/lab/TimePicker';
-import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
+import {
+  EuiFlexGrid,
+  EuiFlexGroup,
+  EuiFlexItem,
+  EuiSpacer,
+  EuiFieldNumber,
+  EuiDatePicker,
+  EuiText
+} from '@elastic/eui';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
-import Typography from '@mui/material/Typography';
-
-import getCurrentTimeAndDate from '../utils/getCurrentTimeAndDate';
+import moment from 'moment';
 import calculateDeliveryFee from '../services/deliveryFeeCalculator';
 
 /**
- * Component that calculates delivery fee based on given user input
+ * Component that shows calculated delivery fee based on given user input
  */
 const FeeCalculator: React.FC = () => {
   // Number inputs need to be handled partly as strings due to unsolved React bug
@@ -26,9 +24,9 @@ const FeeCalculator: React.FC = () => {
   const [cartValue, setCartValue] = useState<number | string>((0).toFixed(2));
   const [distanceValue, setDistanceValue] = useState<number | string>(0);
   const [itemAmountValue, setItemAmountValue] = useState<number | string>(0);
-  const [minDate] = useState<Date>(getCurrentTimeAndDate());
-  const [date, setDate] = useState<Date | null>(getCurrentTimeAndDate());
-  const [time, setTime] = useState<Date | null>(getCurrentTimeAndDate());
+  const [minDate] = useState<moment.Moment>(moment());
+  const [date, setDate] = useState<moment.Moment>(moment().utc());
+  const [time, setTime] = useState<moment.Moment>(moment().utc());
 
   /**
    * Calculates delivery fee with current input states and shows it with two decimals
@@ -51,8 +49,8 @@ const FeeCalculator: React.FC = () => {
     setCartValue((0).toFixed(2));
     setDistanceValue(0);
     setItemAmountValue(0);
-    setDate(getCurrentTimeAndDate());
-    setTime(getCurrentTimeAndDate());
+    setDate(moment().utc());
+    setTime(moment().utc());
     setTotal('0.00€');
   };
 
@@ -60,9 +58,9 @@ const FeeCalculator: React.FC = () => {
    * Handles onChange event on date picker
    *
    * Sets new value as state
-   * @param {Date | null} newTimeAndDate new value
+   * @param {moment.Moment} newDate new value
    */
-  const handleDateChange = (newDate: Date | null): void => {
+  const handleDateChange = (newDate: moment.Moment): void => {
     setDate(newDate);
   };
 
@@ -70,9 +68,9 @@ const FeeCalculator: React.FC = () => {
    * Handles onChange event on time picker
    *
    * Sets new value as state
-   * @param {Date | null} newTimeAndDate new value
+   * @param {moment.Moment} newTime new value
    */
-  const handleTimeChange = (newTime: Date | null): void => {
+  const handleTimeChange = (newTime: moment.Moment): void => {
     setTime(newTime);
   };
 
@@ -123,133 +121,106 @@ const FeeCalculator: React.FC = () => {
 
   return (
     <div className="calculator-container">
-      <Stack
-        spacing={6}
-        direction="column"
-        justifyContent="center"
-        alignItems="center"
-      >
-        <Grid container spacing={3}>
-          <Grid container item spacing={3}>
-            <Grid item xs={6}>
-              <Typography>Cart Value</Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                type="number"
-                id="cartvalue"
+      <EuiFlexGroup direction="column">
+        <EuiFlexItem>
+          <EuiFlexGrid columns={2}>
+            <EuiFlexItem>
+              <EuiText>Cart Value</EuiText>
+            </EuiFlexItem>
+            <EuiFlexItem>
+              <EuiFieldNumber
+                append="€"
                 value={cartValue}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">€</InputAdornment>
-                  ),
-                  inputProps: {
-                    min: 0,
-                    step: 0.01
-                  }
-                }}
-                variant="outlined"
+                id="cartvalue"
+                data-testid="cartvalue"
+                min={0}
+                step={0.01}
               />
-            </Grid>
-          </Grid>
-          <Grid container item spacing={3}>
-            <Grid item xs={6}>
-              <Typography>Delivery distance</Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                type="number"
-                id="distancevalue"
+            </EuiFlexItem>
+            <EuiFlexItem>
+              <EuiText>Delivery distance</EuiText>
+            </EuiFlexItem>
+            <EuiFlexItem>
+              <EuiFieldNumber
+                append="m"
                 value={distanceValue}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">m</InputAdornment>
-                  ),
-                  inputProps: {
-                    min: 0,
-                    step: 1
-                  }
-                }}
-                variant="outlined"
+                id="distancevalue"
+                data-testid="distancevalue"
+                min={0}
+                step={1}
               />
-            </Grid>
-          </Grid>
-          <Grid container item spacing={3}>
-            <Grid item xs={6}>
-              <Typography>Amount of items</Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                type="number"
-                id="itemamountvalue"
+            </EuiFlexItem>
+            <EuiFlexItem>
+              <EuiText>Amount of items</EuiText>
+            </EuiFlexItem>
+            <EuiFlexItem>
+              <EuiFieldNumber
+                append="items"
                 value={itemAmountValue}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">items</InputAdornment>
-                  ),
-                  inputProps: {
-                    min: 0,
-                    step: 1
-                  }
-                }}
-                variant="outlined"
+                id="itemamountvalue"
+                data-testid="itemamountvalue"
+                min={0}
+                step={1}
               />
-            </Grid>
-          </Grid>
-          <Grid container item spacing={3}>
-            <Grid item xs={6}>
-              <Typography>Date and time of delivery (UTC)</Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Stack spacing={1}>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <DesktopDatePicker
-                    inputFormat="dd/MM/yyyy"
-                    value={date}
-                    minDate={minDate}
+            </EuiFlexItem>
+            <EuiFlexItem>
+              <EuiText>Date and time (UTC)</EuiText>
+            </EuiFlexItem>
+            <EuiFlexItem>
+              <EuiFlexGroup direction="column">
+                <EuiFlexItem>
+                  <EuiDatePicker
+                    selected={date}
                     onChange={handleDateChange}
-                    renderInput={(params) => (
-                      <TextField {...params} id="date" />
-                    )}
+                    minDate={minDate}
+                    id="date"
                   />
-                  <TimePicker
-                    value={time}
+                  <EuiSpacer size="s" />
+                  <EuiDatePicker
+                    showTimeSelect
+                    showTimeSelectOnly
+                    selected={time}
                     onChange={handleTimeChange}
-                    renderInput={(params) => (
-                      <TextField {...params} id="time" />
-                    )}
+                    dateFormat="HH:mm"
+                    timeFormat="HH:mm"
+                    id="time"
                   />
-                </LocalizationProvider>
-              </Stack>
-            </Grid>
-          </Grid>
-        </Grid>
-        <Stack spacing={2}>
-          <Button
-            sx={{ backgroundColor: '#009de0' }}
-            onClick={calculateFee}
-            variant="contained"
-          >
-            Calculate delivery price
-          </Button>
-          <Button
-            sx={{ backgroundColor: '#009de0' }}
-            onClick={resetValues}
-            variant="contained"
-          >
-            Reset
-          </Button>
-        </Stack>
-        <Typography variant="h6" data-testid="total">
-          Total price of delivery: {total}
-        </Typography>
-      </Stack>
+                </EuiFlexItem>
+              </EuiFlexGroup>
+            </EuiFlexItem>
+          </EuiFlexGrid>
+        </EuiFlexItem>
+        <EuiFlexItem>
+          <EuiSpacer size="xxl" />
+          <EuiFlexGroup direction="column" alignItems="center">
+            <Button
+              className="calculator-button"
+              onClick={calculateFee}
+              variant="contained"
+            >
+              Calculate delivery price
+            </Button>
+            <EuiSpacer size="s" />
+            <Button
+              className="calculator-button-empty"
+              onClick={resetValues}
+              variant="text"
+            >
+              Reset
+            </Button>
+            <EuiSpacer />
+            <EuiText>
+              Total price of delivery: <strong>{total}</strong>
+            </EuiText>
+          </EuiFlexGroup>
+        </EuiFlexItem>
+      </EuiFlexGroup>
     </div>
   );
 };

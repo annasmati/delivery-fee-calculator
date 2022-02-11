@@ -1,22 +1,16 @@
 import React from 'react';
 import './Header.scss';
-import Typography from '@mui/material/Typography';
-import logo from '../assets/images/logo.png';
-
+import { EuiText } from '@elastic/eui';
+import CalculatorGuide from './PricingGuide';
 /**
  * Component for site header
  */
 const Header: React.FC = () => (
   <header>
-    <div className="flex-logo">
-      <img src={logo} alt="logo" />
-    </div>
-    <div className="flex-title">
-      <Typography className="title-font" variant="h3">
-        Delivery Fee Calculator
-      </Typography>
-    </div>
-    <div className="flex-item" />
+    <EuiText className="title" size="m">
+      <h1>Delivery Fee Calculator</h1>
+    </EuiText>
+    <CalculatorGuide />
   </header>
 );
 
