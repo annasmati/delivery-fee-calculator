@@ -3,6 +3,8 @@
 This is a delivery fee price calculator written in TypeScript and built on React.
 Money and currency handling are done through [Dinero.js library](https://github.com/dinerojs/dinero.js/) to bypass floating number rounding issues.
 
+A live demo can be found [here](https://delivery-fee-calculator.herokuapp.com/).
+
 ## Installation
 
 To start, install needed dependencies with npm:
