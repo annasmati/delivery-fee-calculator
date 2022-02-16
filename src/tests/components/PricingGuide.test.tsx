@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from '@testing-library/react';
-import PricingGuide from './PricingGuide';
+import PricingGuide from '../../components/PricingGuide';
 import {
   additionalDistanceDivisorAsString,
   additionalDistanceSurchargeAsString,
@@ -17,7 +17,7 @@ import {
   rushHourEndAsString,
   rushHourMultiplierAsString,
   rushHourStartAsString
-} from '../constants';
+} from '../../constants';
 
 describe('Component renders correctly', () => {
   it('renders without crashing', () => {

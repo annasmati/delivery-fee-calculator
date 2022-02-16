@@ -4,24 +4,24 @@ import moment from 'moment';
 import {
   isOverDistanceLimit,
   calculateDistanceSurcharge,
-  isOverFourItems,
   calculateItemSurcharge,
   isUnderMinCartValue,
   isNotOverMaxCartValue,
   calculateCartValueSurcharge,
-  isNotUnderDeliveryFeeLimit,
   isRushHour,
   multiplyWithRushHourMultiplier,
-  calculateDeliveryFee
-} from './deliveryFeeCalculator';
+  calculateDeliveryFee,
+  isOverMinAmountOfItems,
+  isNotUnderMaxDeliveryFeeLimit
+} from '../../calculator/deliveryFeeCalculator';
 
 describe('Distance surcharge', () => {
   test('Should check if given distance is greater than 1000', () => {
-    expect(isOverDistanceLimit(0)).toBeFalsy();
-    expect(isOverDistanceLimit(999)).toBeFalsy();
-    expect(isOverDistanceLimit(1000)).toBeFalsy();
-    expect(isOverDistanceLimit(1001)).toBeTruthy();
-    expect(isOverDistanceLimit(10000)).toBeTruthy();
+    expect(isOverDistanceLimit(0)).toEqual(false);
+    expect(isOverDistanceLimit(999)).toEqual(false);
+    expect(isOverDistanceLimit(1000)).toEqual(false);
+    expect(isOverDistanceLimit(1001)).toEqual(true);
+    expect(isOverDistanceLimit(10000)).toEqual(true);
   });
 
   test('Should calculate surcharge resulting from additional distance', () => {
@@ -57,13 +57,13 @@ describe('Distance surcharge', () => {
 
 describe('Item amount surcharge', () => {
   test('Should check if amount of items is greater than 4', () => {
-    expect(isOverFourItems(0)).toBeFalsy();
-    expect(isOverFourItems(0.5)).toBeFalsy();
-    expect(isOverFourItems(1)).toBeFalsy();
-    expect(isOverFourItems(2)).toBeFalsy();
-    expect(isOverFourItems(3)).toBeFalsy();
-    expect(isOverFourItems(4)).toBeFalsy();
-    expect(isOverFourItems(5)).toBeTruthy();
+    expect(isOverMinAmountOfItems(0)).toEqual(false);
+    expect(isOverMinAmountOfItems(0.5)).toEqual(false);
+    expect(isOverMinAmountOfItems(1)).toEqual(false);
+    expect(isOverMinAmountOfItems(2)).toEqual(false);
+    expect(isOverMinAmountOfItems(3)).toEqual(false);
+    expect(isOverMinAmountOfItems(4)).toEqual(false);
+    expect(isOverMinAmountOfItems(5)).toEqual(true);
   });
 
   test('Should calculate surcharge resulting from amount of items', () => {
@@ -209,18 +209,18 @@ describe('Rush hour surcharge', () => {
 
 describe('Cart value surcharge', () => {
   test('Should check if given dinero value is less than 10€', () => {
-    expect(isUnderMinCartValue(dinero({ amount: 0, currency: EUR }))).toBeTruthy();
-    expect(isUnderMinCartValue(dinero({ amount: 50, currency: EUR }))).toBeTruthy();
-    expect(isUnderMinCartValue(dinero({ amount: 900, currency: EUR }))).toBeTruthy();
-    expect(isUnderMinCartValue(dinero({ amount: 1000, currency: EUR }))).toBeFalsy();
+    expect(isUnderMinCartValue(dinero({ amount: 0, currency: EUR }))).toEqual(true);
+    expect(isUnderMinCartValue(dinero({ amount: 50, currency: EUR }))).toEqual(true);
+    expect(isUnderMinCartValue(dinero({ amount: 900, currency: EUR }))).toEqual(true);
+    expect(isUnderMinCartValue(dinero({ amount: 1000, currency: EUR }))).toEqual(false);
   });
 
   test('Should check if given dinero value is less than 100€', () => {
-    expect(isNotOverMaxCartValue(dinero({ amount: 0, currency: EUR }))).toBeTruthy();
-    expect(isNotOverMaxCartValue(dinero({ amount: 50, currency: EUR }))).toBeTruthy();
-    expect(isNotOverMaxCartValue(dinero({ amount: 9999, currency: EUR }))).toBeTruthy();
-    expect(isNotOverMaxCartValue(dinero({ amount: 10000, currency: EUR }))).toBeFalsy();
-    expect(isNotOverMaxCartValue(dinero({ amount: 10100, currency: EUR }))).toBeFalsy();
+    expect(isNotOverMaxCartValue(dinero({ amount: 0, currency: EUR }))).toEqual(true);
+    expect(isNotOverMaxCartValue(dinero({ amount: 50, currency: EUR }))).toEqual(true);
+    expect(isNotOverMaxCartValue(dinero({ amount: 9999, currency: EUR }))).toEqual(true);
+    expect(isNotOverMaxCartValue(dinero({ amount: 10000, currency: EUR }))).toEqual(false);
+    expect(isNotOverMaxCartValue(dinero({ amount: 10100, currency: EUR }))).toEqual(false);
   });
 
   test('Should calculate surcharge resulted from cart value being too low', () => {
@@ -244,12 +244,12 @@ describe('Cart value surcharge', () => {
 
 describe('Delivery fee limit', () => {
   test('Should check if given dinero value is equal to or greater than 15€', () => {
-    expect(isNotUnderDeliveryFeeLimit(dinero({ amount: 0, currency: EUR }))).toBeFalsy();
-    expect(isNotUnderDeliveryFeeLimit(dinero({ amount: 50, currency: EUR }))).toBeFalsy();
-    expect(isNotUnderDeliveryFeeLimit(dinero({ amount: 1000, currency: EUR }))).toBeFalsy();
-    expect(isNotUnderDeliveryFeeLimit(dinero({ amount: 1499, currency: EUR }))).toBeFalsy();
-    expect(isNotUnderDeliveryFeeLimit(dinero({ amount: 1500, currency: EUR }))).toBeTruthy();
-    expect(isNotUnderDeliveryFeeLimit(dinero({ amount: 1501, currency: EUR }))).toBeTruthy();
+    expect(isNotUnderMaxDeliveryFeeLimit(dinero({ amount: 0, currency: EUR }))).toEqual(false);
+    expect(isNotUnderMaxDeliveryFeeLimit(dinero({ amount: 50, currency: EUR }))).toEqual(false);
+    expect(isNotUnderMaxDeliveryFeeLimit(dinero({ amount: 1000, currency: EUR }))).toEqual(false);
+    expect(isNotUnderMaxDeliveryFeeLimit(dinero({ amount: 1499, currency: EUR }))).toEqual(false);
+    expect(isNotUnderMaxDeliveryFeeLimit(dinero({ amount: 1500, currency: EUR }))).toEqual(true);
+    expect(isNotUnderMaxDeliveryFeeLimit(dinero({ amount: 1501, currency: EUR }))).toEqual(true);
   });
 });
 

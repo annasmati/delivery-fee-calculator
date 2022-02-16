@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
-import Header from './Header';
+import Header from '../../components/Header';
 
 describe('Component renders correctly', () => {
   it('renders without crashing', () => {

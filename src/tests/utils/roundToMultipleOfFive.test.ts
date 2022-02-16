@@ -1,4 +1,4 @@
-import roundToMultipleOfFive from './roundToMultipleOfFive';
+import roundToMultipleOfFive from '../../utils/roundToMultipleOfFive';
 
 test('Should round given amount to nearest multiple of five (0.05)', () => {
   expect(roundToMultipleOfFive(0.0000007)).toBe(0);

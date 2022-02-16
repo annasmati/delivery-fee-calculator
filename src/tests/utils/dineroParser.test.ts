@@ -1,6 +1,6 @@
 import { dinero, toSnapshot } from 'dinero.js';
 import { EUR } from '@dinero.js/currencies';
-import { integerToDinero, dineroToInteger, convertToDinero } from './dineroParser';
+import { integerToDinero, dineroToInteger, convertToDinero } from '../../utils/dineroParser';
 
 test('Should return a new dinero object with the given integer as its amount value', () => {
   expect(toSnapshot(integerToDinero(200))).toMatchObject(

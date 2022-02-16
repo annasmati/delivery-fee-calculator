@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import '@testing-library/jest-dom';
 import moment from 'moment';
 import { fireEvent, render, screen } from '@testing-library/react';
-import FeeCalculator from './FeeCalculator';
+import FeeCalculator from '../../components/FeeCalculator';
 
 describe('Component renders correctly', () => {
   it('renders without crashing', () => {
