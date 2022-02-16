@@ -1,4 +1,4 @@
-import { Dinero, dinero, DineroSnapshot, toSnapshot } from 'dinero.js';
+import { Dinero, dinero, toSnapshot } from 'dinero.js';
 import { EUR } from '@dinero.js/currencies';
 
 /**
@@ -19,7 +19,7 @@ export const integerToDinero = (amount: number): Dinero<number> =>
  * @returns {number}
  */
 export const dineroToInteger = (dineroObject: Dinero<number>): number => {
-  const parsedObject: DineroSnapshot<number> = toSnapshot(dineroObject);
+  const parsedObject = toSnapshot(dineroObject);
   return parsedObject.amount;
 };
 

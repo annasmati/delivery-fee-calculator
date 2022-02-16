@@ -1,6 +1,6 @@
 import { Dinero, dinero, add, subtract, lessThan, greaterThanOrEqual, toUnit } from 'dinero.js';
 import { EUR } from '@dinero.js/currencies';
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 import { convertToDinero, dineroToInteger } from '../utils/dineroParser';
 import roundToMultipleOfFive from '../utils/roundToMultipleOfFive';
 
@@ -18,7 +18,7 @@ export const isOverDistanceLimit = (deliveryDistance: number): boolean => delive
  */
 export const calculateDistanceSurcharge = (deliveryDistance: number): Dinero<number> => {
   if (isOverDistanceLimit(deliveryDistance)) {
-    const finalCharge: number = Math.ceil(deliveryDistance / 500);
+    const finalCharge = Math.ceil(deliveryDistance / 500);
     return dinero({ amount: finalCharge * 100, currency: EUR });
   }
   return dinero({ amount: 200, currency: EUR });
@@ -45,12 +45,12 @@ export const calculateItemSurcharge = (itemAmount: number): Dinero<number> => {
 
 /**
  * Checks if given date falls into rush hour window.
- * @param {moment.Moment} deliveryTime time of delivery
+ * @param {Moment} deliveryTime time of delivery
  * @returns {boolean} true or false
  */
-export const isRushHour = (deliveryDate: moment.Moment, deliveryTime: moment.Moment): boolean => {
+export const isRushHour = (deliveryDate: Moment, deliveryTime: Moment): boolean => {
   if (deliveryDate && deliveryTime != null) {
-    const hour: number = moment(deliveryTime).utc().hours();
+    const hour = moment(deliveryTime).utc().hours();
     if (moment(deliveryDate).utc().day() === 5) return hour >= 15 && hour <= 18;
   }
   return false;
@@ -107,32 +107,36 @@ export const isNotUnderDeliveryFeeLimit = (deliveryFee: Dinero<number>): boolean
  * @param {number} cartValueAsNumber cart value as a number
  * @param {number} deliveryDistance delivery distance
  * @param {number} itemAmount amount of items
- * @param {moment.Moment} deliveryDate date of delivery
- * @param {moment.Moment} deliveryTime time of delivery
+ * @param {Moment} deliveryDate date of delivery
+ * @param {Moment} deliveryTime time of delivery
  * @returns {number} final delivery fee as a float number (two decimals)
  */
 export const calculateDeliveryFee = (
   cartValueAsNumber: number,
   deliveryDistance: number,
   itemAmount: number,
-  deliveryDate: moment.Moment,
-  deliveryTime: moment.Moment
+  deliveryDate: Moment,
+  deliveryTime: Moment
 ): number => {
   // Rounding possible float number to nearest 0.05 to prevent rounding errors later on
-  const roundedCartValue: number = roundToMultipleOfFive(cartValueAsNumber);
-  const cartValue: Dinero<number> = convertToDinero(roundedCartValue);
-  let finalFee: Dinero<number> = dinero({ amount: 0, currency: EUR });
+  const roundedCartValue = roundToMultipleOfFive(cartValueAsNumber);
+  const cartValue = convertToDinero(roundedCartValue);
+  let finalFee = dinero({ amount: 0, currency: EUR });
+
   if (isNotOverMaxCartValue(cartValue) && cartValueAsNumber !== 0) {
     finalFee = add(finalFee, calculateCartValueSurcharge(cartValue));
     finalFee = add(finalFee, calculateDistanceSurcharge(deliveryDistance));
     finalFee = add(finalFee, calculateItemSurcharge(itemAmount));
+
     if (isRushHour(deliveryDate, deliveryTime)) {
       finalFee = multiplyWithRushHourMultiplier(finalFee);
     }
+
     if (isNotUnderDeliveryFeeLimit(finalFee)) {
       finalFee = dinero({ amount: 1500, currency: EUR });
     }
   }
+
   return toUnit(finalFee, { digits: 2 });
 };
 

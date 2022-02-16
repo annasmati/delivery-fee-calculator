@@ -12,7 +12,7 @@ import {
   EuiText
 } from '@elastic/eui';
 import Button from '@mui/material/Button';
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 import calculateDeliveryFee from '../services/deliveryFeeCalculator';
 
 /**
@@ -24,9 +24,9 @@ const FeeCalculator: React.FC = () => {
   const [cartValue, setCartValue] = useState<number | string>((0).toFixed(2));
   const [distanceValue, setDistanceValue] = useState<number | string>(0);
   const [itemAmountValue, setItemAmountValue] = useState<number | string>(0);
-  const [minDate] = useState<moment.Moment>(moment());
-  const [date, setDate] = useState<moment.Moment>(moment().utc());
-  const [time, setTime] = useState<moment.Moment>(moment().utc());
+  const [minDate] = useState<Moment>(moment());
+  const [date, setDate] = useState<Moment>(moment().utc());
+  const [time, setTime] = useState<Moment>(moment().utc());
 
   /**
    * Calculates delivery fee with current input states and shows it with two decimals
@@ -58,9 +58,9 @@ const FeeCalculator: React.FC = () => {
    * Handles onChange event on date picker
    *
    * Sets new value as state
-   * @param {moment.Moment} newDate new value
+   * @param {Moment} newDate new value
    */
-  const handleDateChange = (newDate: moment.Moment): void => {
+  const handleDateChange = (newDate: Moment): void => {
     setDate(newDate);
   };
 
@@ -68,9 +68,9 @@ const FeeCalculator: React.FC = () => {
    * Handles onChange event on time picker
    *
    * Sets new value as state
-   * @param {moment.Moment} newTime new value
+   * @param {Moment} newTime new value
    */
-  const handleTimeChange = (newTime: moment.Moment): void => {
+  const handleTimeChange = (newTime: Moment): void => {
     setTime(newTime);
   };
 
@@ -79,7 +79,7 @@ const FeeCalculator: React.FC = () => {
    * @param {React.ChangeEvent<HTMLInputElement>} event
    */
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    const value: number = Number(event.target.value);
+    const value = Number(event.target.value);
     switch (event.target.id) {
       case 'cartvalue':
         setCartValue(value);
@@ -103,7 +103,7 @@ const FeeCalculator: React.FC = () => {
    * @param {React.FocusEvent<HTMLInputElement>} event
    */
   const handleBlur = (event: React.FocusEvent<HTMLInputElement>): void => {
-    const value: string = event.target.value.replace(/^0+(?!\.|$)/, '');
+    const value = event.target.value.replace(/^0+(?!\.|$)/, '');
     switch (event.target.id) {
       case 'cartvalue':
         setCartValue(parseFloat(value).toFixed(2));
