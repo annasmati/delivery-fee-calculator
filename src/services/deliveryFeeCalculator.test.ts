@@ -190,118 +190,66 @@ describe('Rush hour surcharge', () => {
 
   test('Should multiply given dinero value with 1.1 and return new dinero object', () => {
     expect(
-      toSnapshot(
-        multiplyWithRushHourMultiplier(dinero({ amount: 0, currency: EUR }))
-      )
+      toSnapshot(multiplyWithRushHourMultiplier(dinero({ amount: 0, currency: EUR })))
     ).toMatchObject(toSnapshot(dinero({ amount: 0, currency: EUR })));
     expect(
-      toSnapshot(
-        multiplyWithRushHourMultiplier(dinero({ amount: 50, currency: EUR }))
-      )
+      toSnapshot(multiplyWithRushHourMultiplier(dinero({ amount: 50, currency: EUR })))
     ).toMatchObject(toSnapshot(dinero({ amount: 55, currency: EUR })));
     expect(
-      toSnapshot(
-        multiplyWithRushHourMultiplier(dinero({ amount: 500, currency: EUR }))
-      )
+      toSnapshot(multiplyWithRushHourMultiplier(dinero({ amount: 500, currency: EUR })))
     ).toMatchObject(toSnapshot(dinero({ amount: 550, currency: EUR })));
     expect(
-      toSnapshot(
-        multiplyWithRushHourMultiplier(dinero({ amount: 940, currency: EUR }))
-      )
+      toSnapshot(multiplyWithRushHourMultiplier(dinero({ amount: 940, currency: EUR })))
     ).toMatchObject(toSnapshot(dinero({ amount: 1034, currency: EUR })));
     expect(
-      toSnapshot(
-        multiplyWithRushHourMultiplier(
-          dinero({ amount: 1000000, currency: EUR })
-        )
-      )
+      toSnapshot(multiplyWithRushHourMultiplier(dinero({ amount: 1000000, currency: EUR })))
     ).toMatchObject(toSnapshot(dinero({ amount: 1100000, currency: EUR })));
   });
 });
 
 describe('Cart value surcharge', () => {
   test('Should check if given dinero value is less than 10€', () => {
-    expect(
-      isUnderMinCartValue(dinero({ amount: 0, currency: EUR }))
-    ).toBeTruthy();
-    expect(
-      isUnderMinCartValue(dinero({ amount: 50, currency: EUR }))
-    ).toBeTruthy();
-    expect(
-      isUnderMinCartValue(dinero({ amount: 900, currency: EUR }))
-    ).toBeTruthy();
-    expect(
-      isUnderMinCartValue(dinero({ amount: 1000, currency: EUR }))
-    ).toBeFalsy();
+    expect(isUnderMinCartValue(dinero({ amount: 0, currency: EUR }))).toBeTruthy();
+    expect(isUnderMinCartValue(dinero({ amount: 50, currency: EUR }))).toBeTruthy();
+    expect(isUnderMinCartValue(dinero({ amount: 900, currency: EUR }))).toBeTruthy();
+    expect(isUnderMinCartValue(dinero({ amount: 1000, currency: EUR }))).toBeFalsy();
   });
 
   test('Should check if given dinero value is less than 100€', () => {
-    expect(
-      isNotOverMaxCartValue(dinero({ amount: 0, currency: EUR }))
-    ).toBeTruthy();
-    expect(
-      isNotOverMaxCartValue(dinero({ amount: 50, currency: EUR }))
-    ).toBeTruthy();
-    expect(
-      isNotOverMaxCartValue(dinero({ amount: 9999, currency: EUR }))
-    ).toBeTruthy();
-    expect(
-      isNotOverMaxCartValue(dinero({ amount: 10000, currency: EUR }))
-    ).toBeFalsy();
-    expect(
-      isNotOverMaxCartValue(dinero({ amount: 10100, currency: EUR }))
-    ).toBeFalsy();
+    expect(isNotOverMaxCartValue(dinero({ amount: 0, currency: EUR }))).toBeTruthy();
+    expect(isNotOverMaxCartValue(dinero({ amount: 50, currency: EUR }))).toBeTruthy();
+    expect(isNotOverMaxCartValue(dinero({ amount: 9999, currency: EUR }))).toBeTruthy();
+    expect(isNotOverMaxCartValue(dinero({ amount: 10000, currency: EUR }))).toBeFalsy();
+    expect(isNotOverMaxCartValue(dinero({ amount: 10100, currency: EUR }))).toBeFalsy();
   });
 
   test('Should calculate surcharge resulted from cart value being too low', () => {
     expect(
-      toSnapshot(
-        calculateCartValueSurcharge(dinero({ amount: 0, currency: EUR }))
-      )
+      toSnapshot(calculateCartValueSurcharge(dinero({ amount: 0, currency: EUR })))
     ).toMatchObject(toSnapshot(dinero({ amount: 1000, currency: EUR })));
     expect(
-      toSnapshot(
-        calculateCartValueSurcharge(dinero({ amount: 50, currency: EUR }))
-      )
+      toSnapshot(calculateCartValueSurcharge(dinero({ amount: 50, currency: EUR })))
     ).toMatchObject(toSnapshot(dinero({ amount: 950, currency: EUR })));
     expect(
-      toSnapshot(
-        calculateCartValueSurcharge(dinero({ amount: 500, currency: EUR }))
-      )
+      toSnapshot(calculateCartValueSurcharge(dinero({ amount: 500, currency: EUR })))
     ).toMatchObject(toSnapshot(dinero({ amount: 500, currency: EUR })));
     expect(
-      toSnapshot(
-        calculateCartValueSurcharge(dinero({ amount: 940, currency: EUR }))
-      )
+      toSnapshot(calculateCartValueSurcharge(dinero({ amount: 940, currency: EUR })))
     ).toMatchObject(toSnapshot(dinero({ amount: 60, currency: EUR })));
     expect(
-      toSnapshot(
-        calculateCartValueSurcharge(dinero({ amount: 1000, currency: EUR }))
-      )
+      toSnapshot(calculateCartValueSurcharge(dinero({ amount: 1000, currency: EUR })))
     ).toMatchObject(toSnapshot(dinero({ amount: 0, currency: EUR })));
   });
 });
 
 describe('Delivery fee limit', () => {
   test('Should check if given dinero value is equal to or greater than 15€', () => {
-    expect(
-      isNotUnderDeliveryFeeLimit(dinero({ amount: 0, currency: EUR }))
-    ).toBeFalsy();
-    expect(
-      isNotUnderDeliveryFeeLimit(dinero({ amount: 50, currency: EUR }))
-    ).toBeFalsy();
-    expect(
-      isNotUnderDeliveryFeeLimit(dinero({ amount: 1000, currency: EUR }))
-    ).toBeFalsy();
-    expect(
-      isNotUnderDeliveryFeeLimit(dinero({ amount: 1499, currency: EUR }))
-    ).toBeFalsy();
-    expect(
-      isNotUnderDeliveryFeeLimit(dinero({ amount: 1500, currency: EUR }))
-    ).toBeTruthy();
-    expect(
-      isNotUnderDeliveryFeeLimit(dinero({ amount: 1501, currency: EUR }))
-    ).toBeTruthy();
+    expect(isNotUnderDeliveryFeeLimit(dinero({ amount: 0, currency: EUR }))).toBeFalsy();
+    expect(isNotUnderDeliveryFeeLimit(dinero({ amount: 50, currency: EUR }))).toBeFalsy();
+    expect(isNotUnderDeliveryFeeLimit(dinero({ amount: 1000, currency: EUR }))).toBeFalsy();
+    expect(isNotUnderDeliveryFeeLimit(dinero({ amount: 1499, currency: EUR }))).toBeFalsy();
+    expect(isNotUnderDeliveryFeeLimit(dinero({ amount: 1500, currency: EUR }))).toBeTruthy();
+    expect(isNotUnderDeliveryFeeLimit(dinero({ amount: 1501, currency: EUR }))).toBeTruthy();
   });
 });
 

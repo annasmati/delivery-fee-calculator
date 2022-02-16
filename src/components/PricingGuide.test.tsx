@@ -41,9 +41,7 @@ describe('Flyout operations', () => {
     fireEvent.click(buttonPricing);
 
     expect(
-      screen.getByText(
-        'The following elements will have an affect on the total price of delivery:'
-      )
+      screen.getByText('The following elements will have an affect on the total price of delivery:')
     ).toBeInTheDocument();
 
     expect(screen.getByText('Cart Value')).toBeInTheDocument();

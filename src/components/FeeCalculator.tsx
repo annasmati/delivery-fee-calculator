@@ -199,19 +199,11 @@ const FeeCalculator: React.FC = () => {
         <EuiFlexItem>
           <EuiSpacer size="xxl" />
           <EuiFlexGroup direction="column" alignItems="center">
-            <Button
-              className="calculator-button"
-              onClick={calculateFee}
-              variant="contained"
-            >
+            <Button className="calculator-button" onClick={calculateFee} variant="contained">
               Calculate delivery price
             </Button>
             <EuiSpacer size="s" />
-            <Button
-              className="calculator-button-empty"
-              onClick={resetValues}
-              variant="text"
-            >
+            <Button className="calculator-button-empty" onClick={resetValues} variant="text">
               Reset
             </Button>
             <EuiSpacer />

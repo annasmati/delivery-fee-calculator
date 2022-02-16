@@ -30,12 +30,9 @@ describe('Component renders correctly', () => {
     render(<FeeCalculator />);
 
     screen.getByText((content: any, node: any) => {
-      const hasText = (node: any) =>
-        node.textContent === 'Total price of delivery: 0.00€';
+      const hasText = (node: any) => node.textContent === 'Total price of delivery: 0.00€';
       const nodeHasText = hasText(node);
-      const childrenDontHaveText = Array.from(node.children).every(
-        (child: any) => !hasText(child)
-      );
+      const childrenDontHaveText = Array.from(node.children).every((child: any) => !hasText(child));
 
       return nodeHasText && childrenDontHaveText;
     });
@@ -56,42 +53,32 @@ describe('Component renders correctly', () => {
 describe('inputs work correctly', () => {
   it('changes cart value', () => {
     render(<FeeCalculator />);
-    const cartValueElement = screen.getByTestId(
-      'cartvalue'
-    ) as HTMLInputElement;
+    const cartValueElement = screen.getByTestId('cartvalue') as HTMLInputElement;
     fireEvent.change(cartValueElement, { target: { value: '15' } });
     expect(cartValueElement.value).toBe('15');
   });
   it('changes distance value', () => {
     render(<FeeCalculator />);
-    const distanceElement = screen.getByTestId(
-      'distancevalue'
-    ) as HTMLInputElement;
+    const distanceElement = screen.getByTestId('distancevalue') as HTMLInputElement;
     fireEvent.change(distanceElement, { target: { value: '15' } });
     expect(distanceElement.value).toBe('15');
   });
   it('changes item amount', () => {
     render(<FeeCalculator />);
-    const itemAmountElement = screen.getByTestId(
-      'itemamountvalue'
-    ) as HTMLInputElement;
+    const itemAmountElement = screen.getByTestId('itemamountvalue') as HTMLInputElement;
     fireEvent.change(itemAmountElement, { target: { value: '15' } });
     expect(itemAmountElement.value).toBe('15');
   });
   it('changes date', () => {
     const rendered = render(<FeeCalculator />);
-    const inputElement = rendered.container.querySelector(
-      '#date'
-    ) as HTMLInputElement;
+    const inputElement = rendered.container.querySelector('#date') as HTMLInputElement;
     fireEvent.change(inputElement, { target: { value: '31/12/2022' } });
     expect(inputElement.value).toBe('31/12/2022');
   });
 
   it('changes time', () => {
     const rendered = render(<FeeCalculator />);
-    const inputElement = rendered.container.querySelector(
-      '#time'
-    ) as HTMLInputElement;
+    const inputElement = rendered.container.querySelector('#time') as HTMLInputElement;
     inputElement.value = '12:00';
     expect(inputElement.value).toBe('12:00');
   });
@@ -104,24 +91,16 @@ describe('reset works correctly', () => {
     const inputCartValue = screen.getByTestId('cartvalue') as HTMLInputElement;
     fireEvent.change(inputCartValue, { target: { value: '15' } });
 
-    const inputDistance = screen.getByTestId(
-      'distancevalue'
-    ) as HTMLInputElement;
+    const inputDistance = screen.getByTestId('distancevalue') as HTMLInputElement;
     fireEvent.change(inputDistance, { target: { value: '15' } });
 
-    const inputItemAmount = screen.getByTestId(
-      'itemamountvalue'
-    ) as HTMLInputElement;
+    const inputItemAmount = screen.getByTestId('itemamountvalue') as HTMLInputElement;
     fireEvent.change(inputItemAmount, { target: { value: '15' } });
 
-    const inputDate = rendered.container.querySelector(
-      '#date'
-    ) as HTMLInputElement;
+    const inputDate = rendered.container.querySelector('#date') as HTMLInputElement;
     fireEvent.change(inputDate, { target: { value: '31/12/2022' } });
 
-    const inputTime = rendered.container.querySelector(
-      '#time'
-    ) as HTMLInputElement;
+    const inputTime = rendered.container.querySelector('#time') as HTMLInputElement;
     inputTime.value = '12:00';
 
     const buttonReset = screen.getByText('Reset');
@@ -142,36 +121,25 @@ describe('calculator works correctly', () => {
     const inputCartValue = screen.getByTestId('cartvalue') as HTMLInputElement;
     fireEvent.change(inputCartValue, { target: { value: '15' } });
 
-    const inputDistance = screen.getByTestId(
-      'distancevalue'
-    ) as HTMLInputElement;
+    const inputDistance = screen.getByTestId('distancevalue') as HTMLInputElement;
     fireEvent.change(inputDistance, { target: { value: '2000' } });
 
-    const inputItemAmount = screen.getByTestId(
-      'itemamountvalue'
-    ) as HTMLInputElement;
+    const inputItemAmount = screen.getByTestId('itemamountvalue') as HTMLInputElement;
     fireEvent.change(inputItemAmount, { target: { value: '15' } });
 
-    const inputDate = rendered.container.querySelector(
-      '#date'
-    ) as HTMLInputElement;
+    const inputDate = rendered.container.querySelector('#date') as HTMLInputElement;
     fireEvent.change(inputDate, { target: { value: '31/2/2022' } });
 
-    const inputTime = rendered.container.querySelector(
-      '#time'
-    ) as HTMLInputElement;
+    const inputTime = rendered.container.querySelector('#time') as HTMLInputElement;
     fireEvent.change(inputTime, { target: { value: '12:00' } });
 
     const buttonElement = screen.getByText('Calculate delivery price');
     fireEvent.click(buttonElement);
 
     screen.getByText((content: any, node: any) => {
-      const hasText = (node: any) =>
-        node.textContent === 'Total price of delivery: 9.50€';
+      const hasText = (node: any) => node.textContent === 'Total price of delivery: 9.50€';
       const nodeHasText = hasText(node);
-      const childrenDontHaveText = Array.from(node.children).every(
-        (child: any) => !hasText(child)
-      );
+      const childrenDontHaveText = Array.from(node.children).every((child: any) => !hasText(child));
 
       return nodeHasText && childrenDontHaveText;
     });

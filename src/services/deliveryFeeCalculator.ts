@@ -1,12 +1,4 @@
-import {
-  Dinero,
-  dinero,
-  add,
-  subtract,
-  lessThan,
-  greaterThanOrEqual,
-  toUnit
-} from 'dinero.js';
+import { Dinero, dinero, add, subtract, lessThan, greaterThanOrEqual, toUnit } from 'dinero.js';
 import { EUR } from '@dinero.js/currencies';
 import moment from 'moment';
 import { convertToDinero, dineroToInteger } from '../utils/dineroParser';
@@ -17,17 +9,14 @@ import roundToMultipleOfFive from '../utils/roundToMultipleOfFive';
  * @param {number} deliveryDistance distance as an integer
  * @returns {boolean} true or false
  */
-export const isOverDistanceLimit = (deliveryDistance: number): boolean =>
-  deliveryDistance > 1000;
+export const isOverDistanceLimit = (deliveryDistance: number): boolean => deliveryDistance > 1000;
 
 /**
  * Calculates surcharge resulting from additional distance
  * @param {number} deliveryDistance deliveryDistance distance as an integer
  * @returns {Dinero<number>} surcharge as a dinero object
  */
-export const calculateDistanceSurcharge = (
-  deliveryDistance: number
-): Dinero<number> => {
+export const calculateDistanceSurcharge = (deliveryDistance: number): Dinero<number> => {
   if (isOverDistanceLimit(deliveryDistance)) {
     const finalCharge: number = Math.ceil(deliveryDistance / 500);
     return dinero({ amount: finalCharge * 100, currency: EUR });
@@ -59,10 +48,7 @@ export const calculateItemSurcharge = (itemAmount: number): Dinero<number> => {
  * @param {moment.Moment} deliveryTime time of delivery
  * @returns {boolean} true or false
  */
-export const isRushHour = (
-  deliveryDate: moment.Moment,
-  deliveryTime: moment.Moment
-): boolean => {
+export const isRushHour = (deliveryDate: moment.Moment, deliveryTime: moment.Moment): boolean => {
   if (deliveryDate && deliveryTime != null) {
     const hour: number = moment(deliveryTime).utc().hours();
     if (moment(deliveryDate).utc().day() === 5) return hour >= 15 && hour <= 18;
@@ -74,9 +60,7 @@ export const isRushHour = (
  * @param {Dinero<number>} dineroObject dinero object to multiply
  * @returns {Dinero<number} new dinero object with updated amount
  */
-export const multiplyWithRushHourMultiplier = (
-  dineroObject: Dinero<number>
-): Dinero<number> => {
+export const multiplyWithRushHourMultiplier = (dineroObject: Dinero<number>): Dinero<number> => {
   const parsedAmount = dineroToInteger(dineroObject);
   const multipliedAmount = parsedAmount * 1.1;
   return dinero({ amount: Math.round(multipliedAmount), currency: EUR });
@@ -103,9 +87,7 @@ export const isNotOverMaxCartValue = (cartValue: Dinero<number>): boolean =>
  * @param {Dinero<number>} cartValue cart value as a dinero object
  * @returns {Dinero<number} surcharge as a dinero object
  */
-export const calculateCartValueSurcharge = (
-  cartValue: Dinero<number>
-): Dinero<number> => {
+export const calculateCartValueSurcharge = (cartValue: Dinero<number>): Dinero<number> => {
   if (isUnderMinCartValue(cartValue)) {
     return subtract(dinero({ amount: 1000, currency: EUR }), cartValue);
   }
@@ -117,9 +99,7 @@ export const calculateCartValueSurcharge = (
  * @param {Dinero<number>} deliveryFee delivery fee as a dinero object
  * @returns {boolean} true or false
  */
-export const isNotUnderDeliveryFeeLimit = (
-  deliveryFee: Dinero<number>
-): boolean =>
+export const isNotUnderDeliveryFeeLimit = (deliveryFee: Dinero<number>): boolean =>
   greaterThanOrEqual(deliveryFee, dinero({ amount: 1500, currency: EUR }));
 
 /**

@@ -33,39 +33,35 @@ const CalculatorGuide: React.FC = () => {
         </EuiFlyoutHeader>
         <EuiFlyoutBody>
           <EuiText>
-            <p>
-              The following elements will have an affect on the total price of
-              delivery:
-            </p>
+            <p>The following elements will have an affect on the total price of delivery:</p>
             <ul>
               <li>
                 <p>
                   <strong>Cart Value</strong>
                 </p>
-                If the cart value is less than 10€, a small order surcharge is
-                added. The surcharge is calculated by subtracting the cart value
-                from 10€.
+                If the cart value is less than 10€, a small order surcharge is added. The surcharge
+                is calculated by subtracting the cart value from 10€.
               </li>
               <li>
                 <p>
                   <strong>Delivery Distance</strong>
                 </p>
-                The delivery fee for the first 1000 meters (=1km) is 2€. For
-                every additional 500 meters, 1€ is added.
+                The delivery fee for the first 1000 meters (=1km) is 2€. For every additional 500
+                meters, 1€ is added.
               </li>
               <li>
                 <p>
                   <strong>Amount of items</strong>
                 </p>
-                If the number of items exceeds 4, an additional 50 cent
-                surcharge is added for each item.
+                If the number of items exceeds 4, an additional 50 cent surcharge is added for each
+                item.
               </li>
               <li>
                 <p>
                   <strong>Rush Hour</strong>
                 </p>
-                During the Friday rush (3 - 7 PM UTC), a 10% increase is added
-                to the total fee (total fee including possible surcharges).
+                During the Friday rush (3 - 7 PM UTC), a 10% increase is added to the total fee
+                (total fee including possible surcharges).
               </li>
               <li>
                 <p>
@@ -77,8 +73,7 @@ const CalculatorGuide: React.FC = () => {
                 <p>
                   <strong>Free Delivery</strong>
                 </p>
-                The delivery is free (0€) when the cart value is equal to or
-                more than 100€.
+                The delivery is free (0€) when the cart value is equal to or more than 100€.
               </li>
             </ul>
           </EuiText>
