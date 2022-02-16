@@ -13,7 +13,7 @@ import {
 } from '@elastic/eui';
 import Button from '@mui/material/Button';
 import moment, { Moment } from 'moment';
-import calculateDeliveryFee from '../services/deliveryFeeCalculator';
+import calculateDeliveryFee from '../calculator/deliveryFeeCalculator';
 
 /**
  * Component that shows calculated delivery fee based on given user input

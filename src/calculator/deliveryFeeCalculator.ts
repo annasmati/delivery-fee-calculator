@@ -3,13 +3,31 @@ import { EUR } from '@dinero.js/currencies';
 import moment, { Moment } from 'moment';
 import { convertToDinero, dineroToInteger } from '../utils/dineroParser';
 import roundToMultipleOfFive from '../utils/roundToMultipleOfFive';
+import {
+  additionalDistanceDivisor,
+  additionalDistanceSurcharge,
+  additionalItemSurcharge,
+  maxCartValue,
+  maxDeliveryFee,
+  minCartValue,
+  minCartValueSurcharge,
+  minDeliveryDistance,
+  minDistanceSurcharge,
+  minItemAmount,
+  minItemSurcharge,
+  rushHourDay,
+  rushHourEnd,
+  rushHourMultiplier,
+  rushHourStart
+} from '../constants';
 
 /**
- * Checks if given distance is greater than 1000
+ * Checks if given distance is greater than set minimum
  * @param {number} deliveryDistance distance as an integer
  * @returns {boolean} true or false
  */
-export const isOverDistanceLimit = (deliveryDistance: number): boolean => deliveryDistance > 1000;
+export const isOverDistanceLimit = (deliveryDistance: number): boolean =>
+  deliveryDistance > minDeliveryDistance;
 
 /**
  * Calculates surcharge resulting from additional distance
@@ -18,18 +36,18 @@ export const isOverDistanceLimit = (deliveryDistance: number): boolean => delive
  */
 export const calculateDistanceSurcharge = (deliveryDistance: number): Dinero<number> => {
   if (isOverDistanceLimit(deliveryDistance)) {
-    const finalCharge = Math.ceil(deliveryDistance / 500);
-    return dinero({ amount: finalCharge * 100, currency: EUR });
+    const finalCharge = Math.ceil(deliveryDistance / additionalDistanceDivisor);
+    return dinero({ amount: finalCharge * additionalDistanceSurcharge, currency: EUR });
   }
-  return dinero({ amount: 200, currency: EUR });
+  return dinero({ amount: minDistanceSurcharge, currency: EUR });
 };
 
 /**
- * Checks if given amount of items is greater than 4
+ * Checks if given amount of items is greater than set minimum
  * @param {number} itemAmount amount of items as an integer
  * @returns {boolean} true or false
  */
-export const isOverFourItems = (itemAmount: number): boolean => itemAmount > 4;
+export const isOverFourItems = (itemAmount: number): boolean => itemAmount > minItemAmount;
 
 /**
  * Calculates the surcharge resulting from amount of additional items
@@ -38,13 +56,16 @@ export const isOverFourItems = (itemAmount: number): boolean => itemAmount > 4;
  */
 export const calculateItemSurcharge = (itemAmount: number): Dinero<number> => {
   if (isOverFourItems(itemAmount)) {
-    return dinero({ amount: 50 * (itemAmount - 4), currency: EUR });
+    return dinero({
+      amount: additionalItemSurcharge * (itemAmount - minItemAmount),
+      currency: EUR
+    });
   }
-  return dinero({ amount: 0, currency: EUR });
+  return dinero({ amount: minItemSurcharge, currency: EUR });
 };
 
 /**
- * Checks if given date falls into rush hour window.
+ * Checks if given date falls into rush hour window
  * @param {Moment | null} deliveryDate date of delivery
  * @param {Moment | null} deliveryTime time of delivery
  * @returns {boolean} true or false
@@ -52,36 +73,37 @@ export const calculateItemSurcharge = (itemAmount: number): Dinero<number> => {
 export const isRushHour = (deliveryDate: Moment | null, deliveryTime: Moment | null): boolean => {
   if (deliveryDate && deliveryTime != null) {
     const hour = moment(deliveryTime).utc().hours();
-    if (moment(deliveryDate).utc().day() === 5) return hour >= 15 && hour <= 18;
+    if (moment(deliveryDate).utc().day() === rushHourDay)
+      return hour >= rushHourStart && hour < rushHourEnd;
   }
   return false;
 };
 /**
- * Multiplies given dinero value with 1.1
+ * Multiplies given dinero value with set multiplier
  * @param {Dinero<number>} dineroObject dinero object to multiply
  * @returns {Dinero<number} new dinero object with updated amount
  */
 export const multiplyWithRushHourMultiplier = (dineroObject: Dinero<number>): Dinero<number> => {
   const parsedAmount = dineroToInteger(dineroObject);
-  const multipliedAmount = parsedAmount * 1.1;
+  const multipliedAmount = parsedAmount * rushHourMultiplier;
   return dinero({ amount: Math.round(multipliedAmount), currency: EUR });
 };
 
 /**
- * Checks if given dinero amount is less than 1000 (10€)
+ * Checks if given dinero amount is less than set minimum cart value
  * @param {Dinero<number>} cartValue cart value as a dinero object
  * @returns {boolean} true or false
  */
 export const isUnderMinCartValue = (cartValue: Dinero<number>): boolean =>
-  lessThan(cartValue, dinero({ amount: 1000, currency: EUR }));
+  lessThan(cartValue, dinero({ amount: minCartValue, currency: EUR }));
 
 /**
- * Checks if given dinero amount is less than 10000 (100€)
+ * Checks if given dinero amount is less than set maxiumum cart value
  * @param {Dinero<number>} cartValue cart value as a dinero object
  * @returns {boolean} true or false
  */
 export const isNotOverMaxCartValue = (cartValue: Dinero<number>): boolean =>
-  lessThan(cartValue, dinero({ amount: 10000, currency: EUR }));
+  lessThan(cartValue, dinero({ amount: maxCartValue, currency: EUR }));
 
 /**
  * Calculates surcharge resulting from cart value being too low
@@ -90,18 +112,18 @@ export const isNotOverMaxCartValue = (cartValue: Dinero<number>): boolean =>
  */
 export const calculateCartValueSurcharge = (cartValue: Dinero<number>): Dinero<number> => {
   if (isUnderMinCartValue(cartValue)) {
-    return subtract(dinero({ amount: 1000, currency: EUR }), cartValue);
+    return subtract(dinero({ amount: minCartValue, currency: EUR }), cartValue);
   }
-  return dinero({ amount: 0, currency: EUR });
+  return dinero({ amount: minCartValueSurcharge, currency: EUR });
 };
 
 /**
- * Checks if given dinero value is equal to or greater than 1500 (15€)
+ * Checks if given dinero value is equal to or greater than set maximum delivery fee
  * @param {Dinero<number>} deliveryFee delivery fee as a dinero object
  * @returns {boolean} true or false
  */
 export const isNotUnderDeliveryFeeLimit = (deliveryFee: Dinero<number>): boolean =>
-  greaterThanOrEqual(deliveryFee, dinero({ amount: 1500, currency: EUR }));
+  greaterThanOrEqual(deliveryFee, dinero({ amount: maxDeliveryFee, currency: EUR }));
 
 /**
  * Calculates the final delivery fee
@@ -134,7 +156,7 @@ export const calculateDeliveryFee = (
     }
 
     if (isNotUnderDeliveryFeeLimit(finalFee)) {
-      finalFee = dinero({ amount: 1500, currency: EUR });
+      finalFee = dinero({ amount: maxDeliveryFee, currency: EUR });
     }
   }
 

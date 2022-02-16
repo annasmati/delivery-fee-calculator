@@ -3,6 +3,21 @@ import ReactDOM from 'react-dom';
 import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from '@testing-library/react';
 import PricingGuide from './PricingGuide';
+import {
+  additionalDistanceDivisorAsString,
+  additionalDistanceSurchargeAsString,
+  additionalItemSurchargeAsString,
+  maxCartValueAsString,
+  maxDeliveryFeeAsString,
+  minCartValueAsString,
+  minDeliveryDistanceAsString,
+  minDistanceSurchargeAsString,
+  minItemAmountAsString,
+  rushHourDayAsString,
+  rushHourEndAsString,
+  rushHourMultiplierAsString,
+  rushHourStartAsString
+} from '../constants';
 
 describe('Component renders correctly', () => {
   it('renders without crashing', () => {
@@ -48,8 +63,8 @@ describe('Flyout operations', () => {
 
     expect(
       screen.getByText(
-        'If the cart value is less than 10€, a small order surcharge is added. ' +
-          'The surcharge is calculated by subtracting the cart value from 10€.'
+        `If the cart value is less than ${minCartValueAsString}€, a small order surcharge is added. ` +
+          `The surcharge is calculated by subtracting the cart value from ${minCartValueAsString}€.`
       )
     ).toBeInTheDocument();
 
@@ -57,8 +72,8 @@ describe('Flyout operations', () => {
 
     expect(
       screen.getByText(
-        'The delivery fee for the first 1000 meters (=1km) is 2€. ' +
-          'For every additional 500 meters, 1€ is added.'
+        `The delivery fee for the first ${minDeliveryDistanceAsString} meters is ${minDistanceSurchargeAsString}€. ` +
+          `For every additional ${additionalDistanceDivisorAsString} meters, ${additionalDistanceSurchargeAsString}€ is added.`
       )
     ).toBeInTheDocument();
 
@@ -66,8 +81,8 @@ describe('Flyout operations', () => {
 
     expect(
       screen.getByText(
-        'If the number of items exceeds 4, an additional ' +
-          '50 cent surcharge is added for each item.'
+        `If the number of items exceeds ${minItemAmountAsString}, an additional ` +
+          `${additionalItemSurchargeAsString}€ surcharge is added for each item.`
       )
     ).toBeInTheDocument();
 
@@ -75,7 +90,8 @@ describe('Flyout operations', () => {
 
     expect(
       screen.getByText(
-        'During the Friday rush (3 - 7 PM UTC), a 10% increase is added ' +
+        `During the ${rushHourDayAsString} rush (${rushHourStartAsString} - ` +
+          `${rushHourEndAsString} UTC), a ${rushHourMultiplierAsString}% increase is added ` +
           'to the total fee (total fee including possible surcharges).'
       )
     ).toBeInTheDocument();
@@ -83,14 +99,14 @@ describe('Flyout operations', () => {
     expect(screen.getByText('Maximum Delivery Price')).toBeInTheDocument();
 
     expect(
-      screen.getByText('The total price of delivery will never exceed 15€.')
+      screen.getByText(`The total price of delivery will never exceed ${maxDeliveryFeeAsString}€.`)
     ).toBeInTheDocument();
 
     expect(screen.getByText('Free Delivery')).toBeInTheDocument();
 
     expect(
       screen.getByText(
-        'The delivery is free (0€) when the cart value is equal to or more than 100€.'
+        `The delivery is free (0€) when the cart value is equal to or more than ${maxCartValueAsString}€.`
       )
     ).toBeInTheDocument();
   });
