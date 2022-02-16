@@ -26,21 +26,15 @@ const FeeCalculator: React.FC = () => {
   const [cartValue, setCartValue] = useState<number | string>((0).toFixed(2));
   const [distanceValue, setDistanceValue] = useState<number | string>(0);
   const [itemAmountValue, setItemAmountValue] = useState<number | string>(0);
-  const [minDate] = useState<Moment>(moment());
   const [date, setDate] = useState<Moment | null>(moment().utc());
   const [time, setTime] = useState<Moment | null>(moment().utc());
+  const minDate = moment();
 
   /**
    * Calculates delivery fee with current input states and shows it with two decimals
    */
   const calculateFee = (): void => {
-    const finalFee = calculateDeliveryFee(
-      Number(cartValue),
-      Number(distanceValue),
-      Number(itemAmountValue),
-      date,
-      time
-    );
+    const finalFee = calculateDeliveryFee(+cartValue, +distanceValue, +itemAmountValue, date, time);
     setTotal(`${finalFee.toFixed(2)}€`);
   };
 
@@ -57,47 +51,38 @@ const FeeCalculator: React.FC = () => {
   };
 
   /**
-   * Handles onChange events on input fields
-   * @param {React.ChangeEvent<HTMLInputElement>} event
-   */
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    const value = Number(event.target.value);
-    switch (event.target.id) {
-      case 'cartvalue':
-        setCartValue(value);
-        break;
-      case 'distancevalue':
-        setDistanceValue(value);
-        break;
-      case 'itemamountvalue':
-        setItemAmountValue(value);
-        break;
-      default:
-        throw new Error(`Input element with id ${event.target.id} not found.`);
-    }
-  };
-
-  /**
-   * Handles onBlur events on input fields
+   * Handles onChange and onBlur events on input fields
    *
    * Used for slicing unnecessary leading zeroes and adding two decimals
    * when needed as user clicks out of a field
-   * @param {React.FocusEvent<HTMLInputElement>} event
+   * @param {React.ChangeEvent<HTMLInputElement> | React.FocusEvent<HTMLInputElement>} event
    */
-  const handleBlur = (event: React.FocusEvent<HTMLInputElement>): void => {
-    const value = event.target.value.replace(/^0+(?!\.|$)/, '');
-    switch (event.target.id) {
-      case 'cartvalue':
-        setCartValue(parseFloat(value).toFixed(2));
-        break;
-      case 'distancevalue':
-        setDistanceValue(value);
-        break;
-      case 'itemamountvalue':
-        setItemAmountValue(value);
-        break;
-      default:
-        throw new Error(`Input element with id ${event.target.id} not found.`);
+  const handleChange = (
+    event: React.ChangeEvent<HTMLInputElement> | React.FocusEvent<HTMLInputElement>
+  ): void => {
+    let value;
+
+    if (event.type === 'change') value = +event.target.value;
+    if (event.type === 'blur') value = event.target.value.replace(/^0+(?!\.|$)/, '');
+
+    if (value !== undefined) {
+      switch (event.target.id) {
+        case 'cartvalue':
+          if (typeof value === 'string') {
+            setCartValue(parseFloat(value).toFixed(2));
+          } else {
+            setCartValue(value);
+          }
+          break;
+        case 'distancevalue':
+          setDistanceValue(value);
+          break;
+        case 'itemamountvalue':
+          setItemAmountValue(value);
+          break;
+        default:
+          throw new Error(`Input element with id ${event.target.id} not found.`);
+      }
     }
   };
 
@@ -114,7 +99,7 @@ const FeeCalculator: React.FC = () => {
                 append="€"
                 value={cartValue}
                 onChange={handleChange}
-                onBlur={handleBlur}
+                onBlur={handleChange}
                 id="cartvalue"
                 data-testid="cartvalue"
                 min={0}
@@ -129,7 +114,7 @@ const FeeCalculator: React.FC = () => {
                 append="m"
                 value={distanceValue}
                 onChange={handleChange}
-                onBlur={handleBlur}
+                onBlur={handleChange}
                 id="distancevalue"
                 data-testid="distancevalue"
                 min={0}
@@ -144,7 +129,7 @@ const FeeCalculator: React.FC = () => {
                 append="items"
                 value={itemAmountValue}
                 onChange={handleChange}
-                onBlur={handleBlur}
+                onBlur={handleChange}
                 id="itemamountvalue"
                 data-testid="itemamountvalue"
                 min={0}
