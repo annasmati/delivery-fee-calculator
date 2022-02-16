@@ -46,4 +46,4 @@ To run all tests use:
 npm test
 ```
 
-- Use `"npm run test:coverage"` to see the coverage report
+- Use `npm run test:coverage` to see the coverage report
