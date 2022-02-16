@@ -20,6 +20,8 @@ import calculateDeliveryFee from '../services/deliveryFeeCalculator';
  */
 const FeeCalculator: React.FC = () => {
   // Number inputs need to be handled partly as strings due to unsolved React bug
+  // See https://github.com/facebook/react/issues/9402
+
   const [total, setTotal] = useState<string>('0.00€');
   const [cartValue, setCartValue] = useState<number | string>((0).toFixed(2));
   const [distanceValue, setDistanceValue] = useState<number | string>(0);
