@@ -14,7 +14,7 @@ import Button from '@mui/material/Button';
  * Component that shows a flyout containing
  * pricing information when button is pressed
  */
-const CalculatorGuide: React.FC = () => {
+const PricingGuide: React.FC = () => {
   const [isFlyoutVisible, setIsFlyoutVisible] = useState(false);
   let flyout;
 
@@ -99,4 +99,4 @@ const CalculatorGuide: React.FC = () => {
   );
 };
 
-export default CalculatorGuide;
+export default PricingGuide;
