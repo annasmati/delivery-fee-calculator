@@ -13,7 +13,7 @@ export const isOverDistanceLimit = (deliveryDistance: number): boolean => delive
 
 /**
  * Calculates surcharge resulting from additional distance
- * @param {number} deliveryDistance deliveryDistance distance as an integer
+ * @param {number} deliveryDistance distance as an integer
  * @returns {Dinero<number>} surcharge as a dinero object
  */
 export const calculateDistanceSurcharge = (deliveryDistance: number): Dinero<number> => {
@@ -45,10 +45,11 @@ export const calculateItemSurcharge = (itemAmount: number): Dinero<number> => {
 
 /**
  * Checks if given date falls into rush hour window.
- * @param {Moment} deliveryTime time of delivery
+ * @param {Moment | null} deliveryDate date of delivery
+ * @param {Moment | null} deliveryTime time of delivery
  * @returns {boolean} true or false
  */
-export const isRushHour = (deliveryDate: Moment, deliveryTime: Moment): boolean => {
+export const isRushHour = (deliveryDate: Moment | null, deliveryTime: Moment | null): boolean => {
   if (deliveryDate && deliveryTime != null) {
     const hour = moment(deliveryTime).utc().hours();
     if (moment(deliveryDate).utc().day() === 5) return hour >= 15 && hour <= 18;
@@ -107,16 +108,16 @@ export const isNotUnderDeliveryFeeLimit = (deliveryFee: Dinero<number>): boolean
  * @param {number} cartValueAsNumber cart value as a number
  * @param {number} deliveryDistance delivery distance
  * @param {number} itemAmount amount of items
- * @param {Moment} deliveryDate date of delivery
- * @param {Moment} deliveryTime time of delivery
+ * @param {Moment | null} deliveryDate date of delivery
+ * @param {Moment | null} deliveryTime time of delivery
  * @returns {number} final delivery fee as a float number (two decimals)
  */
 export const calculateDeliveryFee = (
   cartValueAsNumber: number,
   deliveryDistance: number,
   itemAmount: number,
-  deliveryDate: Moment,
-  deliveryTime: Moment
+  deliveryDate: Moment | null,
+  deliveryTime: Moment | null
 ): number => {
   // Rounding possible float number to nearest 0.05 to prevent rounding errors later on
   const roundedCartValue = roundToMultipleOfFive(cartValueAsNumber);

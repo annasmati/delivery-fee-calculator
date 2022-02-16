@@ -27,8 +27,8 @@ const FeeCalculator: React.FC = () => {
   const [distanceValue, setDistanceValue] = useState<number | string>(0);
   const [itemAmountValue, setItemAmountValue] = useState<number | string>(0);
   const [minDate] = useState<Moment>(moment());
-  const [date, setDate] = useState<Moment>(moment().utc());
-  const [time, setTime] = useState<Moment>(moment().utc());
+  const [date, setDate] = useState<Moment | null>(moment().utc());
+  const [time, setTime] = useState<Moment | null>(moment().utc());
 
   /**
    * Calculates delivery fee with current input states and shows it with two decimals
@@ -54,26 +54,6 @@ const FeeCalculator: React.FC = () => {
     setDate(moment().utc());
     setTime(moment().utc());
     setTotal('0.00€');
-  };
-
-  /**
-   * Handles onChange event on date picker
-   *
-   * Sets new value as state
-   * @param {Moment} newDate new value
-   */
-  const handleDateChange = (newDate: Moment): void => {
-    setDate(newDate);
-  };
-
-  /**
-   * Handles onChange event on time picker
-   *
-   * Sets new value as state
-   * @param {Moment} newTime new value
-   */
-  const handleTimeChange = (newTime: Moment): void => {
-    setTime(newTime);
   };
 
   /**
@@ -177,18 +157,13 @@ const FeeCalculator: React.FC = () => {
             <EuiFlexItem>
               <EuiFlexGroup direction="column">
                 <EuiFlexItem>
-                  <EuiDatePicker
-                    selected={date}
-                    onChange={handleDateChange}
-                    minDate={minDate}
-                    id="date"
-                  />
+                  <EuiDatePicker selected={date} onChange={setDate} minDate={minDate} id="date" />
                   <EuiSpacer size="s" />
                   <EuiDatePicker
                     showTimeSelect
                     showTimeSelectOnly
                     selected={time}
-                    onChange={handleTimeChange}
+                    onChange={setTime}
                     dateFormat="HH:mm"
                     timeFormat="HH:mm"
                     id="time"
